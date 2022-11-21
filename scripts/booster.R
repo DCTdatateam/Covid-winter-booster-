@@ -65,5 +65,5 @@ latest_coverage <- uptake %>%
 
 ## exports
 
-write.csv(total_boosted, "Covid-winter-booster-/data/total_boosted.csv", row.names = FALSE)
+write.csv(total_boosted, "data/total_boosted.csv", row.names = FALSE)
 
