@@ -1,11 +1,9 @@
 library(tidyverse)
 library(lubridate)
 
-
 ## Weekly and cumulative totals
 
 total_boosted <- read_csv("https://www.opendata.nhs.scot/dataset/086c153d-0fdc-4f7c-ad51-1e856c094a0e/resource/6978457e-f619-491c-885d-f60e90e81cbd/download/weekly_covid_vacc_scot_20221116.csv")
-
 
 total_boosted <- total_boosted %>% 
   mutate(Date = ymd(Date)) %>% 
@@ -25,8 +23,6 @@ names(total_boosted)[names(total_boosted) == 'CumulativeNumberVaccinated'] <- 'R
 ## Eligible uptake, and weekly and cumulative totals, all ages 
 
 uptake <- read_csv("https://www.opendata.nhs.scot/dataset/086c153d-0fdc-4f7c-ad51-1e856c094a0e/resource/831b8008-7635-4774-8bf1-495985965546/download/weekly_covid_vacc_eligible_uptake_hb_20221116.csv")
-
-
 
 uptake <- uptake %>%
   mutate(Date = ymd(Date)) %>%
@@ -58,7 +54,8 @@ latestdate <- max(uptake$Date)
 
 latest_coverage <- uptake %>% 
   filter(HB != "Unknown") %>%
-  filter(Date == latestdate)
+  filter(Date == latestdate) %>% 
+  mutate(CumulativeNumberVaccinated=as.character(CumulativeNumberVaccinated))
   
 
 
