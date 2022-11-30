@@ -69,7 +69,7 @@ latest_jcvi <- JCVI_groups %>%
   filter(Date == latestjcvidate) 
 
 
-latest_jcvi$JCVIPriorityGroup <- recode_factor(latest_jcvi$JCVIPriorityGroup, `1 - Care Home Residents - Older Adults` = "Care home residents - older adults", 
+latest_jcvi$JCVIPriorityGroup <- recode_factor(latest_jcvi$JCVIPriorityGroup, `1 - Care Home Residents - Older Adults` = "Care home residents", 
                                 `2 - Any Frontline Health and Social Care Worker` = "Any frontline worker",
                                 `2 - Specified Frontline Health Care Workers` = "Specified health care worker",
                                 `2 - Specified Frontline Social Care Workers` = "Specified social care worker")
