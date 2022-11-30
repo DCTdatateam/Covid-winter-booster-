@@ -14,11 +14,6 @@ total_boosted <- total_boosted %>%
 names(total_boosted)[names(total_boosted) == 'NumberVaccinated'] <- 'Weekly vaccinations'
 names(total_boosted)[names(total_boosted) == 'CumulativeNumberVaccinated'] <- 'Running total'
 
-## totals_button_chart <-  total_boosted %>%
-##  pivot_longer(cols=c('Weekly vaccinations', 'Running total'),
-##               names_to='Type',
-##               values_to='Total') 
-
 
 ## Eligible uptake, and weekly and cumulative totals, all ages 
 
@@ -56,8 +51,31 @@ latest_coverage <- uptake %>%
   filter(HB != "Unknown") %>%
   filter(Date == latestdate) %>% 
   mutate(CumulativeNumberVaccinated=as.character(CumulativeNumberVaccinated))
-  
 
+## Vac by JCVI group
+
+JCVI_groups <- read_csv("https://www.opendata.nhs.scot/dataset/086c153d-0fdc-4f7c-ad51-1e856c094a0e/resource/32e88ef9-8d36-4ec9-a43b-e014bed93599/download/weekly_covid_vacc_jcvi_20221116.csv")
+
+JCVI_groups <- JCVI_groups %>% 
+  mutate(Date = ymd(Date)) %>% 
+  mutate(Month=format(Date,"%b")) %>% 
+  mutate(Day=format(Date,"%d")) %>% 
+  mutate(Year=format(Date,"%Y"))
+
+latestjcvidate <- max(JCVI_groups$Date)
+
+
+latest_jcvi <- JCVI_groups %>% 
+  filter(Date == latestjcvidate) 
+
+
+latest_jcvi$JCVIPriorityGroup <- recode_factor(latest_jcvi$JCVIPriorityGroup, `1 - Care Home Residents - Older Adults` = "Care home residents - older adults", 
+                                `2 - Any Frontline Health and Social Care Worker` = "Any frontline worker",
+                                `2 - Specified Frontline Health Care Workers` = "Specified health care worker",
+                                `2 - Specified Frontline Social Care Workers` = "Specified social care worker")
+
+names(latest_jcvi)[names(latest_jcvi) == 'CumulativeNumberVaccinated'] <- 'Number vaccinated'
+names(latest_jcvi)[names(latest_jcvi) == 'CumulativePercentCoverage'] <- 'Percent coverage'
 
 
 ## exports
@@ -65,4 +83,5 @@ latest_coverage <- uptake %>%
 write.csv(total_boosted, "data/total_boosted.csv", row.names = FALSE)
 write.csv(uptake, "data/uptake_by_area_series.csv", row.names = FALSE)
 write.csv(latest_coverage, "data/uptake_by_area_current.csv", row.names = FALSE)
+write.csv(latest_jcvi, "data/latest_jcvi.csv", row.names = FALSE)
 
